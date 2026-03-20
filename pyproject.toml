@@ -1,0 +1,11 @@
+[project]
+name = "aula-hacky"
+version = "0.1.0"
+description = "Linux RTC setter and capture decoder for the vendor HID channel observed in keyboard5.pcapng"
+requires-python = ">=3.11"
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
