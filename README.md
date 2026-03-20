@@ -15,6 +15,16 @@ The implementation targets Linux `hidraw` directly, so it does not need
 third-party Python modules. You will typically need root or an appropriate
 udev rule to open the device.
 
+## Prerequisites
+
+- Linux with `hidraw` support enabled
+- Python 3
+- `uv`
+- `sudo` access to open the keyboard HID interface
+
+On a normal Linux distribution such as Ubuntu or Arch, this should work as long
+as the keyboard exposes its vendor HID interface through `/dev/hidraw*`.
+
 ## Files
 
 - `aula_hacky/cli.py`: RTC setter CLI
@@ -35,10 +45,10 @@ List matching hidraw devices:
 uv run python -m aula_hacky.cli --list
 ```
 
-Set the keyboard clock to the current local time:
+Set the keyboard clock to the current local time with autodiscovery:
 
 ```bash
-sudo uv run python -m aula_hacky.cli --device /dev/hidrawX --time now
+sudo uv run python -m aula_hacky.cli --time now
 ```
 
 Set a specific local time:
@@ -88,8 +98,9 @@ You can always override this with `--vid`, `--pid`, or `--device`.
 - Byte 31 of every 32-byte packet is the checksum:
   `sum(packet[0:31]) & 0xff`.
 - The dongle path replays the first two captured setup/probe packets.
-- The cable path uses three 64-byte feature reports:
+- The cable path uses four 64-byte feature reports:
   - `0418...`
+  - `0428...`
   - time payload beginning `00015a...`
   - `0402...`
 - The actual config traffic in `keyboard5.pcapng` is on interface `3`
